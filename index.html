@@ -9,16 +9,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --cream: #FBF6EE;
-      --cream-soft: #F4ECDD;
-      --terracotta: #D98B6F;
-      --terracotta-soft: #E9B19C;
-      --sage: #9BB2A1;
-      --sage-soft: #C7D4CB;
-      --lavender: #C9B8DA;
-      --lavender-soft: #E1D6EC;
-      --ink: #3A2E28;
-      --ink-soft: #7A6B64;
+      /* Paleta: malva + verde melón pastel.
+         Los nombres antiguos (terracotta/sage/lavender) se mantienen por compatibilidad
+         pero ahora apuntan a los nuevos tonos. */
+      --cream: #FBF5F7;          /* fondo crema con toque malva muy leve */
+      --cream-soft: #F3E8EE;
+      --terracotta: #B089BE;     /* malva principal (botones, cabeza del robot) */
+      --terracotta-soft: #DCC3E5;
+      --sage: #B8D7A2;           /* verde melón pastel (cuerpo del robot, panel diagnóstico) */
+      --sage-soft: #DDEBCC;
+      --lavender: #CDB4DB;       /* malva-lavanda de apoyo (panel mensaje) */
+      --lavender-soft: #EAD9F0;
+      --ink: #3A2A3D;            /* tinta oscura malva-ciruela */
+      --ink-soft: #766179;
     }
 
     * { box-sizing: border-box; }
@@ -183,7 +186,7 @@
       width: 24px; height: 24px;
       border-radius: 50%;
       background: var(--sage);
-      color: var(--cream);
+      color: var(--ink);
       border: 2px solid var(--ink);
       font-size: 0.85rem;
       font-weight: 800;
@@ -251,7 +254,7 @@
       margin-bottom: 0.6rem;
     }
     .panel.diagnostic { background: var(--sage-soft); }
-    .panel.diagnostic .tag { background: var(--sage); color: var(--cream); }
+    .panel.diagnostic .tag { background: var(--sage); color: var(--ink); }
     .panel.message { background: var(--lavender-soft); }
     .panel.message .tag { background: var(--lavender); color: var(--ink); }
     .panel p { font-size: 1rem; line-height: 1.5; }
