@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Robotito 💛</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #FBF6EE;
+      --cream-soft: #F4ECDD;
+      --terracotta: #D98B6F;
+      --terracotta-soft: #E9B19C;
+      --sage: #9BB2A1;
+      --sage-soft: #C7D4CB;
+      --lavender: #C9B8DA;
+      --lavender-soft: #E1D6EC;
+      --ink: #3A2E28;
+      --ink-soft: #7A6B64;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 20% 0%, var(--lavender-soft) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 90%, var(--sage-soft) 0%, transparent 45%),
+        var(--cream);
+      background-attachment: fixed;
+    }
+
+    #app {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.25rem;
+      animation: fadeSlide 400ms ease-out both;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-weight: 800;
+      font-size: 1.75rem;
+      line-height: 1.2;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    h2 {
+      font-weight: 800;
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .muted { color: var(--ink-soft); font-size: 0.95rem; }
+
+    /* --- Robot --- */
+    .robot-wrap { display: inline-flex; }
+    .robot {
+      display: block;
+      transform-origin: center bottom;
+    }
+    .robot.float { animation: float 4.5s ease-in-out infinite; }
+    .robot.thinking { animation: thinkBounce 1s ease-in-out infinite; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50%      { transform: translateY(-5px) rotate(1deg); }
+    }
+    @keyframes thinkBounce {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50%      { transform: translateY(-4px) rotate(3deg); }
+    }
+
+    .robot .eye {
+      transform-origin: center;
+      animation: blink 5.5s ease-in-out infinite;
+    }
+    .robot .eye.right { animation-delay: 0.05s; }
+    @keyframes blink {
+      0%, 92%, 100% { transform: scaleY(1); }
+      94%           { transform: scaleY(0.1); }
+      96%           { transform: scaleY(1); }
+    }
+
+    /* --- Buttons --- */
+    .btn {
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 1rem;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 0.85rem 1.6rem;
+      background: var(--terracotta);
+      color: var(--cream);
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--ink);
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, opacity 200ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 0 var(--ink); }
+    .btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: 0 3px 0 var(--ink); }
+    .btn.ghost {
+      background: var(--cream);
+      color: var(--ink);
+    }
+    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+
+    /* --- Cards --- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+      width: 100%;
+    }
+    .card {
+      background: var(--cream);
+      border: 2.5px solid var(--ink);
+      border-radius: 18px;
+      padding: 0.9rem 0.4rem 0.7rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      box-shadow: 0 3px 0 var(--ink);
+      transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card:hover { transform: translateY(-2px) rotate(-1deg); box-shadow: 0 5px 0 var(--ink); }
+    .card:active { transform: translateY(1px); box-shadow: 0 2px 0 var(--ink); }
+    .card .emoji { font-size: 2rem; line-height: 1; }
+    .card .label { font-weight: 700; font-size: 0.8rem; color: var(--ink); }
+    .card.selected {
+      background: var(--terracotta-soft);
+      animation: pop 220ms ease-out;
+    }
+    .card.selected::after {
+      content: "✓";
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--sage);
+      color: var(--cream);
+      border: 2px solid var(--ink);
+      font-size: 0.85rem;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      animation: popCheck 250ms ease-out;
+    }
+    @keyframes pop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.06) rotate(1deg); }
+      100% { transform: scale(1); }
+    }
+    @keyframes popCheck {
+      from { transform: scale(0); }
+      to   { transform: scale(1); }
+    }
+
+    .counter {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
+
+    /* --- Thinking --- */
+    .dots { display: inline-flex; gap: 0.35rem; }
+    .dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--terracotta);
+      animation: dot 1.2s ease-in-out infinite;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.15s; background: var(--sage); }
+    .dots span:nth-child(3) { animation-delay: 0.3s; background: var(--lavender); }
+    @keyframes dot {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50%      { transform: translateY(-6px); opacity: 1; }
+    }
+
+    .analyzing-text {
+      font-weight: 700;
+      color: var(--ink);
+      min-height: 1.5rem;
+      animation: fadeIn 250ms ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* --- Result panels --- */
+    .panel {
+      width: 100%;
+      background: var(--cream);
+      border: 2.5px solid var(--ink);
+      border-radius: 22px;
+      padding: 1.1rem 1.1rem;
+      text-align: left;
+      box-shadow: 0 4px 0 var(--ink);
+    }
+    .panel .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      border: 2px solid var(--ink);
+      margin-bottom: 0.6rem;
+    }
+    .panel.diagnostic { background: var(--sage-soft); }
+    .panel.diagnostic .tag { background: var(--sage); color: var(--cream); }
+    .panel.message { background: var(--lavender-soft); }
+    .panel.message .tag { background: var(--lavender); color: var(--ink); }
+    .panel p { font-size: 1rem; line-height: 1.5; }
+    .mood-chip {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 2px solid var(--ink);
+      background: var(--cream);
+      margin: 0.15rem 0.2rem 0 0;
+    }
+
+    .mini-robot { width: 72px; height: 84px; }
+    .big-robot { width: 150px; height: 175px; }
+
+    .footer-hint {
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 360px) {
+      .grid { gap: 0.55rem; }
+      .card { padding: 0.7rem 0.3rem 0.55rem; border-radius: 14px; }
+      .card .emoji { font-size: 1.7rem; }
+      .card .label { font-size: 0.72rem; }
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    /* =======================================================================
+       🛠️  CONTENIDO PERSONALIZABLE — Mario, edita esta sección a tu gusto
+       ======================================================================= */
+
+    // Nombre del que "entrena" al robot (aparece en el saludo).
+    const TRAINER_NAME = "Mario";
+
+    // Saludo de la pantalla intro. Usa {name} si quieres insertar el nombre.
+    const GREETING = {
+      title: "Hola 💛",
+      body: `Me ha entrenado ${"{name}"} durante mucho tiempo. Cuéntame cómo te sientes y te ayudo a entenderte.`,
+    };
+
+    // Las 9 cartitas. Cambia labels/emojis si quieres.
+    const MOODS = [
+      { id: "gris",      emoji: "🌧️", label: "Día gris" },
+      { id: "agotada",   emoji: "😩", label: "Agotada" },
+      { id: "mimos",     emoji: "🫂", label: "Necesito mimos" },
+      { id: "antojo",    emoji: "🍫", label: "Antojo" },
+      { id: "sofa",      emoji: "🎬", label: "Plan sofá" },
+      { id: "cabreada",  emoji: "🔥", label: "Cabreada" },
+      { id: "tierna",    emoji: "🥰", label: "Tierna" },
+      { id: "pensativa", emoji: "💭", label: "Pensativa" },
+      { id: "feliz",     emoji: "✨", label: "Feliz" },
+    ];
+
+    // Combos personalizados. El orden de `moods` no importa (se normaliza).
+    // Escribe con la voz que quieras:
+    //   - diagnostico: la voz del robot (cozy, un pelín gracioso).
+    //   - mensaje: tu voz (directo, cariñoso).
+    const RESPONSES = [
+      {
+        moods: ["gris", "antojo"],
+        diagnostico: "Detecto lluvia interior cruzada con antojo de algo dulce. Protocolo activado: mantita, peli tonta y chocolate sin culpa.",
+        mensaje: "Si estás así y yo no estoy contigo ahora, piensa que te quiero un montón. Mañana te traigo un Kinder Bueno sí o sí.",
+      },
+      {
+        moods: ["agotada", "mimos"],
+        diagnostico: "Batería al 4%. Se requiere abrazo prolongado y silencio confortable. Nada de preguntas ni planes.",
+        mensaje: "Has podido con un día que pesaba un montón. Ven, que yo pongo los brazos y tú no piensas en nada.",
+      },
+      {
+        moods: ["cabreada", "pensativa"],
+        diagnostico: "Se detecta rumiación con chispitas. Recomiendo: desahogo sin interrupciones, té calentito, y cero juicios.",
+        mensaje: "Cuéntame todo, aunque sea enrevesado. Te escucho entera antes de decir nada. Estoy de tu lado siempre.",
+      },
+      {
+        moods: ["sofa", "feliz"],
+        diagnostico: "Modo domingo eterno detectado. Plan sugerido: sofá, peli feúcha, y reírse de tonterías hasta que duela la tripa.",
+        mensaje: "Me encantas cuando estás así, tan a gusto. Elige la peli tú, yo traigo palomitas (y abrazo incluido).",
+      },
+      {
+        moods: ["tierna", "mimos"],
+        diagnostico: "Nivel de ñoñería: crítico. Se solicita acurrucamiento inmediato y besos en la frente.",
+        mensaje: "Eres mi sitio favorito cuando te pones así. Ven aquí que me quedo contigo todo lo que haga falta.",
+      },
+      {
+        moods: ["antojo", "sofa"],
+        diagnostico: "Urgencia leve: se necesita algo rico y un plan horizontal. Prioridad máxima, aunque no lo parezca.",
+        mensaje: "Haz lo que te pida el cuerpo hoy. Mañana seguimos con las cosas importantes — ahora toca cuidarte.",
+      },
+      {
+        moods: ["agotada", "gris"],
+        diagnostico: "Día largo + cielo por dentro nublado. Diagnóstico: nada urgente, todo cansa. Se recomienda ir despacio.",
+        mensaje: "No tienes que estar bien ahora mismo. Yo estoy aquí aunque no digas nada. Te quiero en todos los modos.",
+      },
+      {
+        moods: ["pensativa", "feliz"],
+        diagnostico: "Hay algo bonito dando vueltas en esa cabeza. Se invita a compartirlo — puede ser contagioso.",
+        mensaje: "Me encanta cuando se te pone esa cara. Cuéntame en qué andas pensando, que quiero saberlo todo.",
+      },
+      {
+        moods: ["cabreada", "agotada"],
+        diagnostico: "Alguien o algo te ha calentado el día. Recomendación: respirar, desahogarte, y NO responder mensajes aún.",
+        mensaje: "Ven a quejarte todo lo que necesites. Yo te escucho y hasta me enfado contigo un poco si hace falta.",
+      },
+      {
+        moods: ["mimos", "feliz"],
+        diagnostico: "Estado: felicidad acurrucable. Se solicita contacto físico sin motivo y risitas tontas.",
+        mensaje: "Qué suerte tengo cuando te pones así. Vamos a aprovecharlo a tope — tú, yo, y nada más.",
+      },
+      {
+        moods: ["antojo", "tierna"],
+        diagnostico: "Combo detectado: azúcar + cariño. Requiere aportes simultáneos de ambos para saciar correctamente.",
+        mensaje: "Te apunto las dos cosas: un dulce para ti, y todos los mimos que quieras. Pide lo que necesites.",
+      },
+      {
+        moods: ["gris", "pensativa"],
+        diagnostico: "Día nublado por dentro, con pensamientos en bucle. No se requiere arreglarlo — solo acompañarlo.",
+        mensaje: "Algunos días son así y no pasa nada. Si quieres compañía silenciosa, aquí estoy. Te quiero con lluvia y con sol.",
+      },
+      {
+        moods: ["mimos", "antojo", "sofa"],
+        diagnostico: "TRIPLE COMBO detectado. Protocolo de emergencia cozy: todo a la vez, sin racionar cariño ni chocolate.",
+        mensaje: "Este es mi plan favorito contigo. Avísame y monto el operativo entero — tú solo tienes que aparecer.",
+      },
+      {
+        moods: ["agotada", "mimos", "gris"],
+        diagnostico: "Día muy largo, mucho peso, poca batería. Se recomienda cancelar todo lo cancelable y dejarse querer.",
+        mensaje: "No tienes que ser productiva hoy. Yo me encargo de lo que se pueda — tú descansa y déjate cuidar.",
+      },
+    ];
+
+    // Respuestas cariñosas genéricas cuando no hay combo exacto.
+    const FALLBACKS = [
+      {
+        diagnostico: "Lectura mixta — no está en mis protocolos, pero detecto que te vendría bien que alguien te escuche sin prisa.",
+        mensaje: "Sea lo que sea, cuéntamelo cuando quieras. No tengo prisa y tú tampoco tienes que tenerla.",
+      },
+      {
+        diagnostico: "Señal un poco enredada. Diagnóstico provisional: necesitas algo sencillo y bonito hoy.",
+        mensaje: "Me acuerdo de ti todo el rato. Si quieres compañía, dime y aparezco. Si no, también vale.",
+      },
+      {
+        diagnostico: "Combinación nueva. Me la apunto para la próxima actualización. Mientras tanto: respira, que ya está.",
+        mensaje: "No hace falta que estés de ninguna manera concreta. Me gustas entera, con todo lo que traigas.",
+      },
+      {
+        diagnostico: "Datos insuficientes, pero corazón al 200%. Recomendación genérica: agua, mimos, y hacer algo lento.",
+        mensaje: "Pase lo que pase hoy, te quiero igual. Avísame si quieres que esté cerca o si prefieres espacio.",
+      },
+    ];
+
+    /* =======================================================================
+       ⚙️  Motor — normalmente no hace falta tocar desde aquí para abajo
+       ======================================================================= */
+
+    const state = { screen: "intro", selected: [] };
+    let lastResponse = null;
+    let analyzingTimers = [];
+
+    function robotSVG(className = "") {
+      return `
+        <svg viewBox="0 0 120 145" class="robot ${className}" xmlns="http://www.w3.org/2000/svg">
+          <line x1="60" y1="8" x2="60" y2="24" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="60" cy="7" r="5.5" fill="var(--lavender)" stroke="var(--ink)" stroke-width="2"/>
+          <rect x="22" y="24" width="76" height="62" rx="22" fill="var(--terracotta)" stroke="var(--ink)" stroke-width="2.5"/>
+          <rect x="30" y="32" width="60" height="30" rx="12" fill="var(--cream)" stroke="var(--ink)" stroke-width="2"/>
+          <circle class="eye left" cx="47" cy="48" r="4.5" fill="var(--ink)"/>
+          <circle class="eye right" cx="73" cy="48" r="4.5" fill="var(--ink)"/>
+          <circle cx="35" cy="73" r="4" fill="var(--terracotta-soft)"/>
+          <circle cx="85" cy="73" r="4" fill="var(--terracotta-soft)"/>
+          <path d="M50 73 Q60 79 70 73" stroke="var(--ink)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <rect x="34" y="86" width="52" height="44" rx="14" fill="var(--sage)" stroke="var(--ink)" stroke-width="2.5"/>
+          <rect x="44" y="96" width="32" height="24" rx="7" fill="var(--cream)" stroke="var(--ink)" stroke-width="2"/>
+          <path d="M60 102 C 55 96, 47 100, 52 107 L60 115 L68 107 C 73 100, 65 96, 60 102 Z" fill="var(--terracotta)" stroke="var(--ink)" stroke-width="1.5"/>
+          <line x1="34" y1="98" x2="18" y2="108" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="15" cy="110" r="5" fill="var(--terracotta)" stroke="var(--ink)" stroke-width="2"/>
+          <line x1="86" y1="98" x2="102" y2="108" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="105" cy="110" r="5" fill="var(--terracotta)" stroke="var(--ink)" stroke-width="2"/>
+          <rect x="40" y="130" width="12" height="8" rx="3" fill="var(--ink)"/>
+          <rect x="68" y="130" width="12" height="8" rx="3" fill="var(--ink)"/>
+        </svg>
+      `;
+    }
+
+    function setScreen(screen) {
+      clearAnalyzingTimers();
+      state.screen = screen;
+      render();
+    }
+
+    function clearAnalyzingTimers() {
+      analyzingTimers.forEach(t => clearTimeout(t));
+      analyzingTimers = [];
+    }
+
+    function toggleMood(id) {
+      const i = state.selected.indexOf(id);
+      if (i >= 0) {
+        state.selected.splice(i, 1);
+      } else if (state.selected.length < 3) {
+        state.selected.push(id);
+      } else {
+        // Ya hay 3: reemplazamos el más antiguo para no bloquear al usuario
+        state.selected.shift();
+        state.selected.push(id);
+      }
+      render();
+    }
+
+    function setsEqual(a, b) {
+      if (a.length !== b.length) return false;
+      const sa = new Set(a);
+      return b.every(x => sa.has(x));
+    }
+
+    function findResponse(ids) {
+      const exact = RESPONSES.find(r => setsEqual(r.moods, ids));
+      if (exact) return { ...exact, isFallback: false };
+      const fb = FALLBACKS[Math.floor(Math.random() * FALLBACKS.length)];
+      return { ...fb, moods: ids, isFallback: true };
+    }
+
+    /* -------- Screens -------- */
+
+    function introHTML() {
+      const greetingBody = GREETING.body.replace("{name}", TRAINER_NAME);
+      return `
+        <div class="shell">
+          <div class="robot-wrap">${robotSVG("float big-robot")}</div>
+          <h1>${GREETING.title}</h1>
+          <p>${greetingBody}</p>
+          <button class="btn" id="start-btn">Empezar ✨</button>
+          <div class="footer-hint">Un mini regalito hecho con cariño 💛</div>
+        </div>
+      `;
+    }
+
+    function selectHTML() {
+      const cards = MOODS.map(m => {
+        const selected = state.selected.includes(m.id);
+        return `
+          <div class="card ${selected ? "selected" : ""}" data-id="${m.id}" role="button" tabindex="0" aria-pressed="${selected}">
+            <div class="emoji">${m.emoji}</div>
+            <div class="label">${m.label}</div>
+          </div>
+        `;
+      }).join("");
+
+      const n = state.selected.length;
+      const canAnalyze = n >= 2;
+      const counterText = n === 0
+        ? "Elige 2 o 3 que te peguen hoy"
+        : n === 1
+          ? "Elige al menos una más (hasta 3)"
+          : `${n} seleccionada${n > 1 ? "s" : ""} — cuando quieras`;
+
+      return `
+        <div class="shell">
+          <div class="robot-wrap">${robotSVG("float mini-robot")}</div>
+          <h2>¿Cómo te sientes hoy?</h2>
+          <div class="counter">${counterText}</div>
+          <div class="grid">${cards}</div>
+          <div class="btn-row">
+            <button class="btn ghost" id="back-btn">← Atrás</button>
+            <button class="btn" id="analyze-btn" ${canAnalyze ? "" : "disabled"}>Analizar 🔍</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function analyzingHTML() {
+      return `
+        <div class="shell">
+          <div class="robot-wrap">${robotSVG("thinking big-robot")}</div>
+          <div class="analyzing-text" id="analyzing-text">Analizando…</div>
+          <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+      `;
+    }
+
+    function resultHTML() {
+      const r = lastResponse;
+      const chips = r.moods.map(id => {
+        const m = MOODS.find(x => x.id === id);
+        return m ? `<span class="mood-chip">${m.emoji} ${m.label}</span>` : "";
+      }).join("");
+
+      return `
+        <div class="shell">
+          <div class="robot-wrap">${robotSVG("float mini-robot")}</div>
+          <h2>${r.isFallback ? "Mmm, no tengo un protocolo exacto…" : "He detectado algo 💡"}</h2>
+          <div>${chips}</div>
+          <div class="panel diagnostic">
+            <span class="tag">Diagnóstico</span>
+            <p>${r.diagnostico}</p>
+          </div>
+          <div class="panel message">
+            <span class="tag">Mensaje de ${TRAINER_NAME}</span>
+            <p>${r.mensaje}</p>
+          </div>
+          <div class="btn-row">
+            <button class="btn ghost" id="home-btn">↩ Inicio</button>
+            <button class="btn" id="again-btn">Otra vez 🔁</button>
+          </div>
+        </div>
+      `;
+    }
+
+    /* -------- Render + handlers -------- */
+
+    function render() {
+      const app = document.getElementById("app");
+      app.innerHTML = "";
+      const frag = document.createElement("div");
+      frag.style.display = "contents";
+
+      switch (state.screen) {
+        case "intro":
+          frag.innerHTML = introHTML();
+          app.appendChild(frag);
+          document.getElementById("start-btn").addEventListener("click", () => {
+            state.selected = [];
+            setScreen("select");
+          });
+          break;
+
+        case "select":
+          frag.innerHTML = selectHTML();
+          app.appendChild(frag);
+          document.querySelectorAll(".card").forEach(el => {
+            el.addEventListener("click", () => toggleMood(el.dataset.id));
+            el.addEventListener("keydown", (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleMood(el.dataset.id);
+              }
+            });
+          });
+          document.getElementById("analyze-btn").addEventListener("click", () => {
+            if (state.selected.length < 2) return;
+            setScreen("analyzing");
+          });
+          document.getElementById("back-btn").addEventListener("click", () => setScreen("intro"));
+          break;
+
+        case "analyzing":
+          frag.innerHTML = analyzingHTML();
+          app.appendChild(frag);
+          runAnalysis();
+          break;
+
+        case "result":
+          frag.innerHTML = resultHTML();
+          app.appendChild(frag);
+          document.getElementById("again-btn").addEventListener("click", () => {
+            state.selected = [];
+            setScreen("select");
+          });
+          document.getElementById("home-btn").addEventListener("click", () => {
+            state.selected = [];
+            setScreen("intro");
+          });
+          break;
+      }
+    }
+
+    function runAnalysis() {
+      const phrases = [
+        "Analizando…",
+        "Cruzando datos contigo…",
+        "Consultando mis notas…",
+        "Detectando patrón cozy…",
+      ];
+      const el = document.getElementById("analyzing-text");
+      let i = 0;
+      const step = 650;
+      phrases.forEach((p, idx) => {
+        analyzingTimers.push(setTimeout(() => { if (el) { el.textContent = p; el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; } }, idx * step));
+      });
+      analyzingTimers.push(setTimeout(() => {
+        lastResponse = findResponse(state.selected);
+        setScreen("result");
+      }, phrases.length * step + 300));
+    }
+
+    /* -------- Boot -------- */
+    render();
+  </script>
+</body>
+</html>
